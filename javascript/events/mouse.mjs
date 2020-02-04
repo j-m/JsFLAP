@@ -1,6 +1,5 @@
 import { canvas } from "../draw/world.mjs"
-
-const INVERT_SCROLL = false  // TODO: Let user toggle value
+import { INVERT_SCROLL } from "../settings/user.mjs"
 
 export let EVENT_TYPE = {
   MOVE: "move",

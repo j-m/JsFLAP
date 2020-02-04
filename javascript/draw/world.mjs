@@ -1,7 +1,7 @@
 import * as nodes from "./nodes.mjs"
 import * as grid from "./grid.mjs"
 import * as mouse from "../events/mouse.mjs"
-import { CANVAS_WIDTH, CANVAS_HEIGHT, ZOOM_STEP } from "./settings.mjs"
+import { CANVAS_WIDTH, CANVAS_HEIGHT, ZOOM_STEP } from "../settings/application.mjs"
 
 export let canvas
 export let context

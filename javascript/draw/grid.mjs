@@ -1,8 +1,9 @@
 import { context, centre, zoom } from "./world.mjs"
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from "./settings.mjs"
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from "../settings/application.mjs"
 import * as mouse from "../events/mouse.mjs"
+import { SHOW_CENTRE } from "../settings/user.mjs"
 
-let step = 50
+export let step = 50
 
 function drawVerticalLines() {
   for (let x = centre.x; x > 0; x -= step * zoom) {
@@ -48,7 +49,9 @@ function markCentre() {
 
 export function draw() {
   drawLines()
-  markCentre()
+  if (SHOW_CENTRE) {
+    markCentre()
+  }
 }
 
 let dragging = false
