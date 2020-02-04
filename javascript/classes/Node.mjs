@@ -3,5 +3,7 @@ export default class Node {
     this.x = x
     this.y = y
     this.state = "inactive"
+    this.fill = "aliceblue"
+    this.outline = "lightslategrey"
   } 
 }

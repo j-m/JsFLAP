@@ -42,6 +42,8 @@ export let subscriptions = {
 export function subscribe(type, func) {
   if (subscriptions[type]) {
     subscriptions[type].push(func)
+  } else {
+    throw "BAD_CODE: Use the mouse.EVENT_TYPE enum"
   }
 }
 
@@ -57,6 +59,8 @@ function trigger(type) {
     for (const subscription of subscriptions[type]) {
       subscription()
     }
+  } else {
+    throw "BAD_CODE: Use the mouse.EVENT_TYPE enum"
   }
 }
 

@@ -1,8 +1,7 @@
 import * as nodes from "./nodes.mjs"
 import * as grid from "./grid.mjs"
 import * as mouse from "../events/mouse.mjs"
-
-const ZOOM_STEP = 0.05
+import { CANVAS_WIDTH, CANVAS_HEIGHT, ZOOM_STEP } from "./settings.mjs"
 
 export let canvas
 export let context
@@ -16,7 +15,7 @@ export function initialise() {
 
 export function draw() {
   requestAnimationFrame(draw)
-  context.clearRect(0, 0, window.innerWidth, window.innerHeight)
+  context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
   grid.draw()
   nodes.draw()
 }

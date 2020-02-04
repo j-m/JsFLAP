@@ -1,7 +1,5 @@
 import { context, zoom } from "./world.mjs"
-
-const CANVAS_WIDTH = 1200
-const CANVAS_HEIGHT = 800
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from "./settings.mjs"
 
 let centre = { x: CANVAS_WIDTH/2, y: CANVAS_HEIGHT/2 }
 let step = 50
