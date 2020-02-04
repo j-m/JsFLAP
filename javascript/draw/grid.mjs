@@ -1,7 +1,7 @@
-import { context, zoom } from "./world.mjs"
+import { context, centre, zoom } from "./world.mjs"
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from "./settings.mjs"
+import * as mouse from "../events/mouse.mjs"
 
-let centre = { x: CANVAS_WIDTH/2, y: CANVAS_HEIGHT/2 }
 let step = 50
 
 function drawVerticalLines() {
@@ -26,7 +26,7 @@ function drawHorizontalLines() {
   }
 }
 
-export function draw() {
+function drawLines() {
   context.strokeStyle = 'lightgrey'
   context.lineWidth = '1'
   
@@ -35,3 +35,39 @@ export function draw() {
   drawHorizontalLines()
   context.stroke()
 }
+
+function markCentre() {
+  context.beginPath()
+  context.arc(centre.x, centre.y, 5*zoom, 0, 2 * Math.PI, false)
+  context.fillStyle = 'red'
+  context.fill()
+  context.lineWidth = 1
+  context.strokeStyle = 'black'
+  context.stroke()
+}
+
+export function draw() {
+  drawLines()
+  markCentre()
+}
+
+let dragging = false
+let previousCentre = {}
+let dragFrom = {}
+
+mouse.subscribe(mouse.EVENT_TYPE.DOWN_LEFT, () => {
+  dragging = true
+  dragFrom = { x: mouse.x, y: mouse.y }
+  previousCentre = { x: centre.x, y: centre.y }
+})
+
+mouse.subscribe(mouse.EVENT_TYPE.MOVE, () => {
+  if (dragging) {
+    centre.x = previousCentre.x + (mouse.x - dragFrom.x) * zoom
+    centre.y = previousCentre.y + (mouse.y - dragFrom.y) * zoom
+  }
+})
+
+mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, () => {
+  dragging = false
+})
