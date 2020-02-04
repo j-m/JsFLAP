@@ -48,10 +48,11 @@ export function subscribe(type, func) {
 }
 
 export function initialise() {
-  document.onmousedown = down
-  document.onmousemove = move
-  document.onmouseup = up
-  document.onwheel = scroll
+  canvas.onmousedown = down
+  canvas.onmousemove = move
+  canvas.onmouseup = up
+  canvas.onwheel = scroll
+  canvas.oncontextmenu = contextMenu
 }
 
 function trigger(type) {
@@ -64,7 +65,15 @@ function trigger(type) {
   }
 }
 
+function contextMenu(event) {
+  event.preventDefault()
+  event.stopPropagation()
+  return false
+}
+
 function move(event) {
+  event.preventDefault()
+  event.stopPropagation()
   const canvasRect = canvas.getBoundingClientRect()
   x = event.x - canvasRect.x
   y = event.y - canvasRect.y
@@ -72,6 +81,8 @@ function move(event) {
 }
 
 function down(event) {
+  event.preventDefault()
+  event.stopPropagation()
   switch (event.which) {
     case 1:
       trigger(EVENT_TYPE.DOWN_LEFT)
@@ -89,6 +100,8 @@ function down(event) {
 }
 
 function up(event) {
+  event.preventDefault()
+  event.stopPropagation()
   switch (event.which) {
     case 1:
       trigger(EVENT_TYPE.UP_LEFT)
@@ -106,6 +119,8 @@ function up(event) {
 }
 
 function scroll(event) {
+  event.preventDefault()
+  event.stopPropagation()
   if (event.deltaY < 0) {
     trigger(INVERT_SCROLL ? EVENT_TYPE.SCROLL_OUT : EVENT_TYPE.SCROLL_IN)     
   }

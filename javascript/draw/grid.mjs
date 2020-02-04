@@ -55,7 +55,7 @@ let dragging = false
 let previousCentre = {}
 let dragFrom = {}
 
-mouse.subscribe(mouse.EVENT_TYPE.DOWN_LEFT, () => {
+mouse.subscribe(mouse.EVENT_TYPE.DOWN_RIGHT, () => {
   dragging = true
   dragFrom = { x: mouse.x, y: mouse.y }
   previousCentre = { x: centre.x, y: centre.y }
@@ -68,6 +68,6 @@ mouse.subscribe(mouse.EVENT_TYPE.MOVE, () => {
   }
 })
 
-mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, () => {
+mouse.subscribe(mouse.EVENT_TYPE.UP_RIGHT, () => {
   dragging = false
 })
