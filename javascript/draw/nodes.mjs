@@ -3,19 +3,27 @@ import { canvas, context, zoom, centre } from "./world.mjs"
 import * as mouse from "../events/mouse.mjs"
 import { GRID_STEP } from "../settings/application.mjs"
 import { SNAP_NODES } from "../settings/user.mjs"
+import { nodeOne, nodeTwo } from "./connections.mjs"
 
 const NODE_RADIUS = GRID_STEP * 0.5
 
 let nodeArray = []
-let hoveringOverNode = null
+
+export let hoveringOverNode = null
+
+function nodeIsHighlighted(node) {
+  return node === hoveringOverNode
+      || node === nodeOne
+      || node === nodeTwo
+}
 
 function drawNode(node) {
   context.beginPath()
   context.arc(node.x * zoom + centre.x, node.y * zoom + centre.y, NODE_RADIUS * zoom, 0, 2 * Math.PI, false)
-  context.fillStyle = (hoveringOverNode === node) ? 'white' : node.fill
+  context.fillStyle = nodeIsHighlighted(node) ? 'white' : node.fill
   context.fill()
   context.lineWidth = 5 * zoom
-  context.strokeStyle = (hoveringOverNode === node) ? 'black' : node.outline
+  context.strokeStyle = nodeIsHighlighted(node) ? 'black' : node.outline
   context.stroke()
 }
 
@@ -40,6 +48,7 @@ mouse.subscribe(mouse.EVENT_TYPE.MOVE, () => {
     }
   }) 
 })
+
 
 function nodePosition(x, y) {
   if (SNAP_NODES) {

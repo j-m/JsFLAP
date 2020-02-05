@@ -1,3 +1,4 @@
+import * as connections from "./connections.mjs"
 import * as nodes from "./nodes.mjs"
 import * as grid from "./grid.mjs"
 import * as mouse from "../events/mouse.mjs"
@@ -18,6 +19,7 @@ export function draw() {
   requestAnimationFrame(draw)
   context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
   grid.draw()
+  connections.draw()
   nodes.draw()
 }
 

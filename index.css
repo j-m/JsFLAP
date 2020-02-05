@@ -17,13 +17,20 @@ canvas {
   border: 1px solid black;
 }
 
-#settings {
+#sidebar {
   height: 800px;
-  
   border: 1px solid black;
   border-right: 0;
 }
 
-#settings > * {
-  display:block; 
+fieldset {
+  border:0;
+}
+
+fieldset > *{
+  display: block;
+}
+
+fieldset[disabled] {
+  display: none;
 }
