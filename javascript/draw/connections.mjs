@@ -1,12 +1,8 @@
 import { context, centre, zoom } from "./world.mjs"
-import { hoveringOverNode } from "./nodes.mjs"
+import { nodeOne, nodeTwo } from "./nodes.mjs"
 import * as mouse from "../events/mouse.mjs"
 
-let connectionArray = {}
-
-export let nodeOne 
-export let nodeTwo
-export let downOnNode = false
+export let connectionArray = {}
 
 const ARROW_SIZE = 10
 const HANDLE_SIZE = 50
@@ -102,38 +98,3 @@ export function draw() {
   context.stroke()
 }
 
-mouse.subscribe(mouse.EVENT_TYPE.DOWN_LEFT, () => {
-  downOnNode = hoveringOverNode
-})
-
-mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, () => {
-  if (downOnNode == hoveringOverNode) {
-    if (nodeOne) {
-      nodeTwo = downOnNode
-      document.getElementById("two").disabled = false
-      if (!connectionArray[nodeOne.id]) {
-        connectionArray[nodeOne.id] = nodeOne
-      }
-      connectionArray[nodeOne.id][nodeTwo.id] = nodeTwo
-      document.getElementById("connection").disabled = false
-    } else {
-      nodeOne = downOnNode
-      document.getElementById("one").disabled = false
-    }
-  }
-  if (nodeTwo) {
-    nodeOne = null
-    nodeTwo = null
-    document.getElementById("one").disabled = true
-    document.getElementById("two").disabled = true
-    document.getElementById("connection").disabled = true
-  }
-})
-
-mouse.subscribe(mouse.EVENT_TYPE.UP_RIGHT, () => {
-  nodeOne = null
-  nodeTwo = null
-  document.getElementById("one").disabled = true
-  document.getElementById("two").disabled = true
-  document.getElementById("connection").disabled = true
-})

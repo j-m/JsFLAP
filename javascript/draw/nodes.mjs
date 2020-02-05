@@ -3,13 +3,16 @@ import { canvas, context, zoom, centre } from "./world.mjs"
 import * as mouse from "../events/mouse.mjs"
 import { GRID_STEP } from "../settings/application.mjs"
 import { SNAP_NODES } from "../settings/user.mjs"
-import { nodeOne, nodeTwo } from "./connections.mjs"
+import { connectionArray } from "./connections.mjs"
+
+export let nodeOne 
+export let nodeTwo
+export let downOnNode = false
+export let hoveringOverNode = null
 
 const NODE_RADIUS = GRID_STEP * 0.5
 
 let nodeArray = []
-
-export let hoveringOverNode = null
 
 function nodeIsHighlighted(node) {
   return node === hoveringOverNode
@@ -62,6 +65,50 @@ document.getElementById("SNAP_EXISTING_NODES").addEventListener("click",()=>{
   nodeArray.forEach(node => {
     [node.x, node.y] = nodePosition(node.x,node.y)
   })  
+})
+
+document.getElementById("node1Delete").addEventListener("click",()=>{
+  nodeOne = null
+})
+
+document.getElementById("node2Delete").addEventListener("click",()=>{
+  nodeTwo = null
+})
+
+mouse.subscribe(mouse.EVENT_TYPE.DOWN_LEFT, () => {
+  downOnNode = hoveringOverNode
+})
+
+mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, () => {
+  if (downOnNode == hoveringOverNode) {
+    if (nodeOne) {
+      nodeTwo = downOnNode
+      document.getElementById("two").disabled = false
+      if (!connectionArray[nodeOne.id]) {
+        connectionArray[nodeOne.id] = nodeOne
+      }
+      connectionArray[nodeOne.id][nodeTwo.id] = nodeTwo
+      document.getElementById("connection").disabled = false
+    } else {
+      nodeOne = downOnNode
+      document.getElementById("one").disabled = false
+    }
+  }
+  if (nodeTwo) {
+    nodeOne = null
+    nodeTwo = null
+    document.getElementById("one").disabled = true
+    document.getElementById("two").disabled = true
+    document.getElementById("connection").disabled = true
+  }
+})
+
+mouse.subscribe(mouse.EVENT_TYPE.UP_RIGHT, () => {
+  nodeOne = null
+  nodeTwo = null
+  document.getElementById("one").disabled = true
+  document.getElementById("two").disabled = true
+  document.getElementById("connection").disabled = true
 })
 
 export function draw() {

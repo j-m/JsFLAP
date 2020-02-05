@@ -6,8 +6,9 @@ export default class Node {
     this.x = x
     this.y = y
     this.label = ""
-    this.state = "inactive"
     this.fill = "aliceblue"
     this.outline = "lightslategrey"
+    this.connectedTo = {}
+    this.connectedFrom = {}
   } 
 }
