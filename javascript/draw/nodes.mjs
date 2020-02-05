@@ -4,12 +4,14 @@ import * as mouse from "../events/mouse.mjs"
 import { GRID_STEP } from "../settings/application.mjs"
 import { SNAP_NODES } from "../settings/user.mjs"
 
+const NODE_RADIUS = GRID_STEP * 0.5
+
 let nodeArray = []
 let hoveringOverNode = null
 
 function drawNode(node) {
   context.beginPath()
-  context.arc(node.x * zoom + centre.x, node.y * zoom + centre.y, GRID_STEP * 0.5 * zoom, 0, 2 * Math.PI, false)
+  context.arc(node.x * zoom + centre.x, node.y * zoom + centre.y, NODE_RADIUS * zoom, 0, 2 * Math.PI, false)
   context.fillStyle = (hoveringOverNode === node) ? 'white' : node.fill
   context.fill()
   context.lineWidth = 5 * zoom
@@ -28,14 +30,11 @@ mouse.subscribe(mouse.EVENT_TYPE.MOVE, () => {
   canvas.style.cursor = 'default'
   hoveringOverNode = null
   nodeArray.forEach(node => {
-    const nodeX = Math.round(node.x / GRID_STEP)
-    const nodeY = Math.round(node.y / GRID_STEP)
-    
     const mouseX = Math.round((mouse.x - centre.x) / zoom)
     const mouseY = Math.round((mouse.y - centre.y) / zoom)
     
     const distanceSquared = (mouseX- node.x) * (mouseX - node.x) + (mouseY - node.y) * (mouseY - node.y)
-    if (distanceSquared <= GRID_STEP * GRID_STEP * 0.25) {
+    if (distanceSquared <= NODE_RADIUS * NODE_RADIUS) {
       canvas.style.cursor = 'pointer'
       hoveringOverNode = node
     }
