@@ -1,27 +1,25 @@
 import { context, centre, zoom } from "./world.mjs"
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from "../settings/application.mjs"
+import { CANVAS_WIDTH, CANVAS_HEIGHT, GRID_STEP } from "../settings/application.mjs"
 import * as mouse from "../events/mouse.mjs"
 import { SHOW_CENTRE } from "../settings/user.mjs"
 
-export let step = 50
-
 function drawVerticalLines() {
-  for (let x = centre.x; x > 0; x -= step * zoom) {
+  for (let x = centre.x; x > 0; x -= GRID_STEP * zoom) {
     context.moveTo(x, 0)
     context.lineTo(x, CANVAS_HEIGHT)  
   }
-  for (let x = centre.x + step * zoom; x < CANVAS_WIDTH; x += step * zoom) {
+  for (let x = centre.x + GRID_STEP * zoom; x < CANVAS_WIDTH; x += GRID_STEP * zoom) {
     context.moveTo(x, 0)
     context.lineTo(x, CANVAS_HEIGHT)  
   }
 }
 
 function drawHorizontalLines() {
-  for (let y = centre.y; y > 0; y -= step * zoom) {
+  for (let y = centre.y; y > 0; y -= GRID_STEP * zoom) {
     context.moveTo(0, y)
     context.lineTo(CANVAS_WIDTH, y)  
   }
-  for (let y = centre.y + step * zoom; y < CANVAS_HEIGHT; y += step * zoom) {
+  for (let y = centre.y + GRID_STEP * zoom; y < CANVAS_HEIGHT; y += GRID_STEP * zoom) {
     context.moveTo(0, y)
     context.lineTo(CANVAS_WIDTH, y)  
   }

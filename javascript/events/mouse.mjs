@@ -65,6 +65,7 @@ function trigger(type) {
 }
 
 function contextMenu(event) {
+  move(event)
   event.preventDefault()
   event.stopPropagation()
   return false
@@ -96,6 +97,7 @@ function down(event) {
       trigger(EVENT_TYPE.DOWN_OTHER)
   }
   trigger(EVENT_TYPE.DOWN)
+  move(event)
 }
 
 function up(event) {
@@ -115,6 +117,7 @@ function up(event) {
       trigger(EVENT_TYPE.UP_OTHER)
   }
   trigger(EVENT_TYPE.UP)
+  move(event)
 }
 
 function scroll(event) {
@@ -127,4 +130,5 @@ function scroll(event) {
     trigger(INVERT_SCROLL ? EVENT_TYPE.SCROLL_IN : EVENT_TYPE.SCROLL_OUT)
   }
   trigger(EVENT_TYPE.SCROLL)
+  move(event)
 }
