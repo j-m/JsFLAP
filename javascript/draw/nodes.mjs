@@ -28,6 +28,10 @@ function drawNode(node) {
   context.lineWidth = 5 * zoom
   context.strokeStyle = nodeIsHighlighted(node) ? 'black' : node.outline
   context.stroke()
+  
+  context.fillStyle = "black"
+  context.textBaseline = "middle";
+  context.fillText("s"+node.id, node.x * zoom + centre.x, node.y * zoom + centre.y);
 }
 
 mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, () => {
@@ -51,7 +55,6 @@ mouse.subscribe(mouse.EVENT_TYPE.MOVE, () => {
     }
   }) 
 })
-
 
 function nodePosition(x, y) {
   if (SNAP_NODES) {
@@ -112,6 +115,8 @@ mouse.subscribe(mouse.EVENT_TYPE.UP_RIGHT, () => {
 })
 
 export function draw() {
+  context.font = `${NODE_RADIUS * zoom}px Arial`
+  context.textAlign = "center"
   nodeArray.forEach(node => {
     drawNode(node)
   })
