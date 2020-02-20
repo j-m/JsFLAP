@@ -1,0 +1,36 @@
+body {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  
+  min-height: 100vh;
+  margin: 0;
+}
+
+canvas {
+  display: block;
+  
+  width: 1200px;
+  height: 800px;
+  
+  border: 1px solid black;
+}
+
+#sidebar {
+  height: 800px;
+  border: 1px solid black;
+  border-right: 0;
+}
+
+fieldset {
+  border:0;
+}
+
+fieldset > *{
+  display: block;
+}
+
+fieldset[disabled] {
+  display: none;
+}
