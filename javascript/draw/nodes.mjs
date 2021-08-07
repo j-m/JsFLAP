@@ -14,6 +14,14 @@ const NODE_RADIUS = GRID_STEP * 0.5
 
 let nodeArray = []
 
+export function draw() {
+  context.font = `${NODE_RADIUS * zoom}px Arial`
+  context.textAlign = "center"
+  nodeArray.forEach(node => {
+    drawNode(node)
+  })
+}
+
 function nodeIsHighlighted(node) {
   return node === hoveringOverNode
       || node === nodeOne
@@ -34,14 +42,14 @@ function drawNode(node) {
   context.fillText("s"+node.id, node.x * zoom + centre.x, node.y * zoom + centre.y);
 }
 
-mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, () => {
+function createNode() {
   if (!hoveringOverNode) {
-    const [x, y] = nodePosition((mouse.x - centre.x) / zoom, (mouse.y - centre.y) / zoom)
+    const [x, y] = repositionNodes((mouse.x - centre.x) / zoom, (mouse.y - centre.y) / zoom)
     nodeArray.push(new Node(x, y))
   }
-})
+}
 
-mouse.subscribe(mouse.EVENT_TYPE.MOVE, () => {
+function whichNodeIsMouseHoveringOver () {
   canvas.style.cursor = 'default'
   hoveringOverNode = null
   nodeArray.forEach(node => {
@@ -54,9 +62,9 @@ mouse.subscribe(mouse.EVENT_TYPE.MOVE, () => {
       hoveringOverNode = node
     }
   }) 
-})
+}
 
-function nodePosition(x, y) {
+function repositionNodes(x, y) {
   if (SNAP_NODES) {
     x = Math.round(x / GRID_STEP) * GRID_STEP
     y = Math.round(y / GRID_STEP) * GRID_STEP
@@ -64,25 +72,11 @@ function nodePosition(x, y) {
   return [x, y]
 }
 
-document.getElementById("SNAP_EXISTING_NODES").addEventListener("click",()=>{
-  nodeArray.forEach(node => {
-    [node.x, node.y] = nodePosition(node.x,node.y)
-  })  
-})
-
-document.getElementById("node1Delete").addEventListener("click",()=>{
-  nodeOne = null
-})
-
-document.getElementById("node2Delete").addEventListener("click",()=>{
-  nodeTwo = null
-})
-
-mouse.subscribe(mouse.EVENT_TYPE.DOWN_LEFT, () => {
+function selectNode() {
   downOnNode = hoveringOverNode
-})
+}
 
-mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, () => {
+function connectNodes() {
   if (downOnNode == hoveringOverNode) {
     if (nodeOne) {
       nodeTwo = downOnNode
@@ -104,20 +98,33 @@ mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, () => {
     document.getElementById("two").disabled = true
     document.getElementById("connection").disabled = true
   }
-})
+}
 
-mouse.subscribe(mouse.EVENT_TYPE.UP_RIGHT, () => {
+function deselectNode() {
   nodeOne = null
   nodeTwo = null
   document.getElementById("one").disabled = true
   document.getElementById("two").disabled = true
   document.getElementById("connection").disabled = true
+}
+
+document.getElementById("SNAP_EXISTING_NODES").addEventListener("click",()=>{
+  nodeArray.forEach(node => {
+    [node.x, node.y] = repositionNodes(node.x,node.y)
+  })  
 })
 
-export function draw() {
-  context.font = `${NODE_RADIUS * zoom}px Arial`
-  context.textAlign = "center"
-  nodeArray.forEach(node => {
-    drawNode(node)
-  })
-}
+document.getElementById("node1Delete").addEventListener("click",()=>{
+  nodeOne = null
+})
+
+document.getElementById("node2Delete").addEventListener("click",()=>{
+  nodeTwo = null
+})
+
+mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, createNode)
+mouse.subscribe(mouse.EVENT_TYPE.MOVE, whichNodeIsMouseHoveringOver)
+mouse.subscribe(mouse.EVENT_TYPE.DOWN_LEFT, selectNode)
+mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, connectNodes)
+mouse.subscribe(mouse.EVENT_TYPE.UP_RIGHT, deselectNode)
+
