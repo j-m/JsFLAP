@@ -3,12 +3,12 @@ import { canvas, context, zoom, centre } from "./world.mjs"
 import * as mouse from "../events/mouse.mjs"
 import { GRID_STEP } from "../settings/application.mjs"
 import { SNAP_NODES } from "../settings/user.mjs"
-import { connectionArray } from "./connections.mjs"
+import { connectionArray, connectFromNode, setConnectFromNode } from "./connections.mjs"
 
 export let nodeOne
 export let nodeTwo
-export let downOnNode = false
 export let hoveringOverNode = null
+export let selectedNode = null
 
 const NODE_RADIUS = GRID_STEP * 0.5
 
@@ -51,12 +51,13 @@ function snapNodePositionIfEnabled(x, y) {
 }
 
 function createNode() {
-  if (!hoveringOverNode) {
+  if (!hoveringOverNode && !mouse.hasMovedSinceDown) {
     const [x, y] = snapNodePositionIfEnabled((mouse.x - centre.x) / zoom, (mouse.y - centre.y) / zoom)
     nodeArray.push(new Node(x, y))
   }
 }
 
+let hasMouseLeftNode = false
 function whichNodeIsMouseHoveringOver() {
   canvas.style.cursor = 'default'
   hoveringOverNode = null
@@ -70,42 +71,31 @@ function whichNodeIsMouseHoveringOver() {
       hoveringOverNode = node
     }
   })
-}
-
-function selectNode() {
-  downOnNode = hoveringOverNode
-}
-
-function connectNodes() {
-  if (downOnNode == hoveringOverNode) {
-    if (nodeOne) {
-      nodeTwo = downOnNode
-      document.getElementById("two").disabled = false
-      if (!connectionArray[nodeOne.id]) {
-        connectionArray[nodeOne.id] = nodeOne
-      }
-      connectionArray[nodeOne.id][nodeTwo.id] = nodeTwo
-      document.getElementById("connection").disabled = false
-    } else {
-      nodeOne = downOnNode
-      document.getElementById("one").disabled = false
-    }
-  }
-  if (nodeTwo) {
-    nodeOne = null
-    nodeTwo = null
-    document.getElementById("one").disabled = true
-    document.getElementById("two").disabled = true
-    document.getElementById("connection").disabled = true
+  if (!hasMouseLeftNode && !hoveringOverNode) {
+    hasMouseLeftNode = true
   }
 }
 
-function deselectNode() {
-  nodeOne = null
-  nodeTwo = null
-  document.getElementById("one").disabled = true
-  document.getElementById("two").disabled = true
-  document.getElementById("connection").disabled = true
+function startConnecting() {
+  if (!connectFromNode && hoveringOverNode) {
+    hasMouseLeftNode = false
+    setConnectFromNode(hoveringOverNode)
+  }
+}
+
+function finishConnecting() {
+  if (!connectFromNode) {
+    return
+  }
+  if (!hoveringOverNode || !hasMouseLeftNode) {
+    setConnectFromNode(null)
+    return
+  }
+  if (!connectionArray[connectFromNode.id]) {
+    connectionArray[connectFromNode.id] = connectFromNode
+  }
+  connectionArray[connectFromNode.id][hoveringOverNode.id] = hoveringOverNode
+  setConnectFromNode(null)
 }
 
 document.getElementById("SNAP_EXISTING_NODES").addEventListener("click", () => {
@@ -124,7 +114,6 @@ document.getElementById("node2Delete").addEventListener("click", () => {
 
 mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, createNode)
 mouse.subscribe(mouse.EVENT_TYPE.MOVE, whichNodeIsMouseHoveringOver)
-mouse.subscribe(mouse.EVENT_TYPE.DOWN_LEFT, selectNode)
-mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, connectNodes)
-mouse.subscribe(mouse.EVENT_TYPE.UP_RIGHT, deselectNode)
+mouse.subscribe(mouse.EVENT_TYPE.DOWN_LEFT, startConnecting)
+mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, finishConnecting)
 

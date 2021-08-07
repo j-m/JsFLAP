@@ -20,6 +20,7 @@ export let EVENT_TYPE = {
 
 export let x = 0
 export let y = 0
+export let hasMovedSinceDown = false
 
 export let subscriptions = {
   move: [],
@@ -75,6 +76,10 @@ function move(event) {
   event.preventDefault()
   event.stopPropagation()
   const canvasRect = canvas.getBoundingClientRect()
+  if (x !== event.x - canvasRect.x
+    && y !== event.y - canvasRect.y) {
+    hasMovedSinceDown = true
+  }
   x = event.x - canvasRect.x
   y = event.y - canvasRect.y
   trigger(EVENT_TYPE.MOVE)
@@ -83,6 +88,7 @@ function move(event) {
 function down(event) {
   event.preventDefault()
   event.stopPropagation()
+  hasMovedSinceDown = false
   switch (event.which) {
     case 1:
       trigger(EVENT_TYPE.DOWN_LEFT)
@@ -123,6 +129,7 @@ function up(event) {
 function scroll(event) {
   event.preventDefault()
   event.stopPropagation()
+  hasMovedSinceDown = true
   if (event.deltaY < 0) {
     trigger(INVERT_SCROLL ? EVENT_TYPE.SCROLL_OUT : EVENT_TYPE.SCROLL_IN)
   }

@@ -2,6 +2,7 @@ import { context, centre, zoom } from "./world.mjs"
 import { CANVAS_WIDTH, CANVAS_HEIGHT, GRID_STEP } from "../settings/application.mjs"
 import * as mouse from "../events/mouse.mjs"
 import { SHOW_CENTRE } from "../settings/user.mjs"
+import { connectFromNode } from "./connections.mjs"
 
 function drawVerticalLines() {
   for (let x = centre.x; x > 0; x -= GRID_STEP * zoom) {
@@ -56,10 +57,16 @@ let dragging = false
 let previousCentre = {}
 let dragFrom = {}
 
+function shouldMove() {
+  return !connectFromNode
+}
+
 export function startMoving() {
-  dragging = true
-  dragFrom = { x: mouse.x, y: mouse.y }
-  previousCentre = { x: centre.x, y: centre.y }
+  if (shouldMove()) {
+    dragging = true
+    dragFrom = { x: mouse.x, y: mouse.y }
+    previousCentre = { x: centre.x, y: centre.y }
+  }
 }
 
 export function move() {

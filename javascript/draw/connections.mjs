@@ -1,12 +1,16 @@
 import { context, centre, zoom } from "./world.mjs"
-import { nodeOne, nodeTwo } from "./nodes.mjs"
 import * as mouse from "../events/mouse.mjs"
 
+export let connectFromNode = null
 export let connectionArray = {}
 
 const ARROW_SIZE = 10
 const HANDLE_SIZE = 50
 const SELF_LOOP_SIZE = 100
+
+export function setConnectFromNode(node) {
+  connectFromNode = node
+}
 
 function drawArrow(x, y, angle) {
   context.moveTo(x, y)
@@ -91,8 +95,8 @@ export function draw() {
       drawConnection(fromNode, toNode)
     }
   }
-  if (nodeOne && !nodeTwo) {
-    context.moveTo(nodeOne.x * zoom + centre.x, nodeOne.y * zoom + centre.y)
+  if (connectFromNode) {
+    context.moveTo(connectFromNode.x * zoom + centre.x, connectFromNode.y * zoom + centre.y)
     context.lineTo(mouse.x, mouse.y)
   }
   context.stroke()
