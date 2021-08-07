@@ -14,20 +14,6 @@ const NODE_RADIUS = GRID_STEP * 0.5
 
 let nodeArray = []
 
-export function draw() {
-  context.font = `${NODE_RADIUS * zoom}px Arial`
-  context.textAlign = "center"
-  nodeArray.forEach(node => {
-    drawNode(node)
-  })
-}
-
-function nodeIsHighlighted(node) {
-  return node === hoveringOverNode
-    || node === nodeOne
-    || node === nodeTwo
-}
-
 function drawNode(node) {
   context.beginPath()
   context.arc(node.x * zoom + centre.x, node.y * zoom + centre.y, NODE_RADIUS * zoom, 0, 2 * Math.PI, false)
@@ -42,9 +28,31 @@ function drawNode(node) {
   context.fillText("s" + node.id, node.x * zoom + centre.x, node.y * zoom + centre.y);
 }
 
+export function draw() {
+  context.font = `${NODE_RADIUS * zoom}px Arial`
+  context.textAlign = "center"
+  nodeArray.forEach(node => {
+    drawNode(node)
+  })
+}
+
+function nodeIsHighlighted(node) {
+  return node === hoveringOverNode
+    || node === nodeOne
+    || node === nodeTwo
+}
+
+function snapNodePositionIfEnabled(x, y) {
+  if (SNAP_NODES) {
+    x = Math.round(x / GRID_STEP) * GRID_STEP
+    y = Math.round(y / GRID_STEP) * GRID_STEP
+  }
+  return [x, y]
+}
+
 function createNode() {
   if (!hoveringOverNode) {
-    const [x, y] = repositionNodes((mouse.x - centre.x) / zoom, (mouse.y - centre.y) / zoom)
+    const [x, y] = snapNodePositionIfEnabled((mouse.x - centre.x) / zoom, (mouse.y - centre.y) / zoom)
     nodeArray.push(new Node(x, y))
   }
 }
@@ -62,14 +70,6 @@ function whichNodeIsMouseHoveringOver() {
       hoveringOverNode = node
     }
   })
-}
-
-function repositionNodes(x, y) {
-  if (SNAP_NODES) {
-    x = Math.round(x / GRID_STEP) * GRID_STEP
-    y = Math.round(y / GRID_STEP) * GRID_STEP
-  }
-  return [x, y]
 }
 
 function selectNode() {
@@ -110,7 +110,7 @@ function deselectNode() {
 
 document.getElementById("SNAP_EXISTING_NODES").addEventListener("click", () => {
   nodeArray.forEach(node => {
-    [node.x, node.y] = repositionNodes(node.x, node.y)
+    [node.x, node.y] = snapNodePositionIfEnabled(node.x, node.y)
   })
 })
 
