@@ -3,5 +3,5 @@ export default class Connection {
     this.from = from
     this.to = to
     this.value = value
-  } 
+  }
 }

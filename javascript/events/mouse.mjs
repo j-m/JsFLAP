@@ -124,7 +124,7 @@ function scroll(event) {
   event.preventDefault()
   event.stopPropagation()
   if (event.deltaY < 0) {
-    trigger(INVERT_SCROLL ? EVENT_TYPE.SCROLL_OUT : EVENT_TYPE.SCROLL_IN)     
+    trigger(INVERT_SCROLL ? EVENT_TYPE.SCROLL_OUT : EVENT_TYPE.SCROLL_IN)
   }
   if (event.deltaY > 0) {
     trigger(INVERT_SCROLL ? EVENT_TYPE.SCROLL_IN : EVENT_TYPE.SCROLL_OUT)

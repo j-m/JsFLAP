@@ -5,7 +5,7 @@ import { GRID_STEP } from "../settings/application.mjs"
 import { SNAP_NODES } from "../settings/user.mjs"
 import { connectionArray } from "./connections.mjs"
 
-export let nodeOne 
+export let nodeOne
 export let nodeTwo
 export let downOnNode = false
 export let hoveringOverNode = null
@@ -24,8 +24,8 @@ export function draw() {
 
 function nodeIsHighlighted(node) {
   return node === hoveringOverNode
-      || node === nodeOne
-      || node === nodeTwo
+    || node === nodeOne
+    || node === nodeTwo
 }
 
 function drawNode(node) {
@@ -36,10 +36,10 @@ function drawNode(node) {
   context.lineWidth = 5 * zoom
   context.strokeStyle = nodeIsHighlighted(node) ? 'black' : node.outline
   context.stroke()
-  
+
   context.fillStyle = "black"
   context.textBaseline = "middle";
-  context.fillText("s"+node.id, node.x * zoom + centre.x, node.y * zoom + centre.y);
+  context.fillText("s" + node.id, node.x * zoom + centre.x, node.y * zoom + centre.y);
 }
 
 function createNode() {
@@ -49,19 +49,19 @@ function createNode() {
   }
 }
 
-function whichNodeIsMouseHoveringOver () {
+function whichNodeIsMouseHoveringOver() {
   canvas.style.cursor = 'default'
   hoveringOverNode = null
   nodeArray.forEach(node => {
     const mouseX = Math.round((mouse.x - centre.x) / zoom)
     const mouseY = Math.round((mouse.y - centre.y) / zoom)
-    
-    const distanceSquared = (mouseX- node.x) * (mouseX - node.x) + (mouseY - node.y) * (mouseY - node.y)
+
+    const distanceSquared = (mouseX - node.x) * (mouseX - node.x) + (mouseY - node.y) * (mouseY - node.y)
     if (distanceSquared <= NODE_RADIUS * NODE_RADIUS) {
       canvas.style.cursor = 'pointer'
       hoveringOverNode = node
     }
-  }) 
+  })
 }
 
 function repositionNodes(x, y) {
@@ -108,17 +108,17 @@ function deselectNode() {
   document.getElementById("connection").disabled = true
 }
 
-document.getElementById("SNAP_EXISTING_NODES").addEventListener("click",()=>{
+document.getElementById("SNAP_EXISTING_NODES").addEventListener("click", () => {
   nodeArray.forEach(node => {
-    [node.x, node.y] = repositionNodes(node.x,node.y)
-  })  
+    [node.x, node.y] = repositionNodes(node.x, node.y)
+  })
 })
 
-document.getElementById("node1Delete").addEventListener("click",()=>{
+document.getElementById("node1Delete").addEventListener("click", () => {
   nodeOne = null
 })
 
-document.getElementById("node2Delete").addEventListener("click",()=>{
+document.getElementById("node2Delete").addEventListener("click", () => {
   nodeTwo = null
 })
 

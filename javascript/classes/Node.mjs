@@ -10,5 +10,5 @@ export default class Node {
     this.outline = "lightslategrey"
     this.connectedTo = {}
     this.connectedFrom = {}
-  } 
+  }
 }
