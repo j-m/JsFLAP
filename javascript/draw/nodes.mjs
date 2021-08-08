@@ -8,6 +8,7 @@ import bubble from "./shapes/bubble.mjs"
 import { BUBBLE_HEIGHT } from "./shapes/bubble.mjs"
 import { BUBBLE_ARROW } from "./shapes/bubble.mjs"
 import { BUBBLE_WIDTH } from "./shapes/bubble.mjs"
+import moveArrow from "./shapes/moveArrow.mjs"
 
 export let hoveringOverNode = null
 export let selectedNode = null
@@ -31,7 +32,15 @@ function drawNode(node) {
   context.fillText("s" + node.id, node.x * zoom + centre.x, node.y * zoom + centre.y);
 }
 
-const BUBBLE_OUTLINE_WIDTH = 3
+function drawMove(x, y) {
+  context.strokeStyle = "none"
+  context.fillStyle = "rgba(0, 0, 0, 0.5)"
+  const arrowClone = new Path2D(moveArrow)
+  context.setTransform(zoom, 0, 0, zoom, x + 5 * zoom, y + 7 * zoom);
+  context.fill(arrowClone)
+  context.setTransform(1, 0, 0, 1, 0, 0);
+}
+
 function drawBubble(x, y) {
   y = y - NODE_RADIUS * zoom - NODE_OUTLINE_WIDTH / 2 * zoom - BUBBLE_HEIGHT * zoom - BUBBLE_ARROW * zoom
   x = x - BUBBLE_WIDTH / 2 * zoom
@@ -41,6 +50,7 @@ function drawBubble(x, y) {
   context.setTransform(zoom, 0, 0, zoom, x, y);
   context.fill(bubbleClone)
   context.setTransform(1, 0, 0, 1, 0, 0);
+  drawMove(x, y)
 }
 
 function drawActions() {

@@ -9,7 +9,7 @@ export default bubble
 const x = BUBBLE_WIDTH / 2
 const y = BUBBLE_HEIGHT + BUBBLE_ARROW
 
-bubble.moveTo(x, y);
+bubble.moveTo(x, y)
 bubble.lineTo(x + BUBBLE_ARROW, y - BUBBLE_ARROW)
 bubble.lineTo(x + BUBBLE_WIDTH / 2 - BUBBLE_RADIUS, y - BUBBLE_ARROW)
 bubble.quadraticCurveTo(
