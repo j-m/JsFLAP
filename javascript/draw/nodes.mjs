@@ -4,6 +4,10 @@ import * as mouse from "../events/mouse.mjs"
 import { GRID_STEP } from "../settings/application.mjs"
 import { SNAP_NODES } from "../settings/user.mjs"
 import { connectionArray, connectFromNode, setConnectFromNode } from "./connections.mjs"
+import bubble from "./shapes/bubble.mjs"
+import { BUBBLE_HEIGHT } from "./shapes/bubble.mjs"
+import { BUBBLE_ARROW } from "./shapes/bubble.mjs"
+import { BUBBLE_WIDTH } from "./shapes/bubble.mjs"
 
 export let hoveringOverNode = null
 export let selectedNode = null
@@ -27,52 +31,16 @@ function drawNode(node) {
   context.fillText("s" + node.id, node.x * zoom + centre.x, node.y * zoom + centre.y);
 }
 
-const BUBBLE_WIDTH = 120
-const BUBBLE_HEIGHT = 40
-const BUBBLE_ARROW = 10
-const BUBBLE_RADIUS = 5
 const BUBBLE_OUTLINE_WIDTH = 3
-
 function drawBubble(x, y) {
-  y = y - NODE_RADIUS * zoom - NODE_OUTLINE_WIDTH / 2 * zoom
-
-  context.strokeStyle = "none";
-  context.fillStyle = "rgba(0, 0, 0, 0.5)";
-
-  context.beginPath();
-  context.moveTo(x, y);
-  context.lineTo(x + BUBBLE_ARROW * zoom, y - BUBBLE_ARROW * zoom)
-  context.lineTo(x + BUBBLE_WIDTH * zoom / 2 - BUBBLE_RADIUS * zoom, y - BUBBLE_ARROW * zoom)
-  context.quadraticCurveTo(
-    x + BUBBLE_WIDTH * zoom / 2,
-    y - BUBBLE_ARROW * zoom,
-    x + BUBBLE_WIDTH * zoom / 2,
-    y - BUBBLE_ARROW * zoom - BUBBLE_RADIUS * zoom
-  )
-  context.lineTo(x + BUBBLE_WIDTH * zoom / 2, y - BUBBLE_ARROW * zoom - BUBBLE_HEIGHT * zoom + BUBBLE_RADIUS * zoom)
-  context.quadraticCurveTo(
-    x + BUBBLE_WIDTH * zoom / 2,
-    y - BUBBLE_ARROW * zoom - BUBBLE_HEIGHT * zoom,
-    x + BUBBLE_WIDTH * zoom / 2 - BUBBLE_RADIUS * zoom,
-    y - BUBBLE_ARROW * zoom - BUBBLE_HEIGHT * zoom
-  )
-  context.lineTo(x - BUBBLE_WIDTH * zoom / 2 + BUBBLE_RADIUS * zoom, y - BUBBLE_ARROW * zoom - BUBBLE_HEIGHT * zoom)
-  context.quadraticCurveTo(
-    x - BUBBLE_WIDTH * zoom / 2,
-    y - BUBBLE_ARROW * zoom - BUBBLE_HEIGHT * zoom,
-    x - BUBBLE_WIDTH * zoom / 2,
-    y - BUBBLE_ARROW * zoom - BUBBLE_HEIGHT * zoom + BUBBLE_RADIUS * zoom
-  )
-  context.lineTo(x - BUBBLE_WIDTH * zoom / 2, y - BUBBLE_ARROW * zoom - BUBBLE_RADIUS * zoom)
-  context.quadraticCurveTo(
-    x - BUBBLE_WIDTH * zoom / 2,
-    y - BUBBLE_ARROW * zoom,
-    x - BUBBLE_WIDTH * zoom / 2 + BUBBLE_RADIUS * zoom,
-    y - BUBBLE_ARROW * zoom
-  )
-  context.lineTo(x - BUBBLE_ARROW * zoom, y - BUBBLE_ARROW * zoom)
-  context.closePath()
-  context.fill()
+  y = y - NODE_RADIUS * zoom - NODE_OUTLINE_WIDTH / 2 * zoom - BUBBLE_HEIGHT * zoom - BUBBLE_ARROW * zoom
+  x = x - BUBBLE_WIDTH / 2 * zoom
+  context.strokeStyle = "none"
+  context.fillStyle = "rgba(0, 0, 0, 0.5)"
+  const bubbleClone = new Path2D(bubble)
+  context.setTransform(zoom, 0, 0, zoom, x, y);
+  context.fill(bubbleClone)
+  context.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 function drawActions() {
