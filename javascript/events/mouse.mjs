@@ -75,6 +75,7 @@ function contextMenu(event) {
 function move(event) {
   event.preventDefault()
   event.stopPropagation()
+  canvas.style.cursor = 'default'
   const canvasRect = canvas.getBoundingClientRect()
   if (x !== event.x - canvasRect.x
     && y !== event.y - canvasRect.y) {

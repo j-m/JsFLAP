@@ -103,7 +103,6 @@ function createNode() {
 
 let hasMouseLeftNode = false
 function whichNodeIsMouseHoveringOver() {
-  canvas.style.cursor = 'default'
   hoveringOverNode = null
   nodeArray.forEach(node => {
     if (isMouseInCircle(node.x, node.y, NODE_RADIUS * zoom) && !selectedNode) {
