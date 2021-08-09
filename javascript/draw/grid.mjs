@@ -1,6 +1,6 @@
-import { context, centre, zoom } from "./world.mjs"
+import { context, centre, zoom, mouse } from "./world.mjs"
+import { subscribe, EVENT_TYPE } from "../events/mouse.mjs"
 import { CANVAS_WIDTH, CANVAS_HEIGHT, GRID_STEP } from "../settings/application.mjs"
-import * as mouse from "../events/mouse.mjs"
 import { SHOW_CENTRE } from "../settings/user.mjs"
 import { connectFromNode } from "./connections.mjs"
 
@@ -80,6 +80,6 @@ export function stopMoving() {
   dragging = false
 }
 
-mouse.subscribe(mouse.EVENT_TYPE.DOWN_LEFT, startMoving)
-mouse.subscribe(mouse.EVENT_TYPE.MOVE, move)
-mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, stopMoving)
+subscribe(EVENT_TYPE.DOWN_LEFT, startMoving)
+subscribe(EVENT_TYPE.MOVE, move)
+subscribe(EVENT_TYPE.UP_LEFT, stopMoving)
