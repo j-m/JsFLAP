@@ -1,10 +1,9 @@
 import Node from "../classes/Node.mjs"
-import { canvas, context, zoom, centre } from "./world.mjs"
-import * as mouse from "../events/mouse.mjs"
+import { canvas, context, zoom, centre, mouse } from "./world.mjs"
+import { subscribe, hasMovedSinceDown, EVENT_TYPE } from "../events/mouse.mjs"
 import { GRID_STEP } from "../settings/application.mjs"
 import { SNAP_NODES } from "../settings/user.mjs"
 import { connectionArray, connectFromNode, setConnectFromNode } from "./connections.mjs"
-import bubble from "./shapes/bubble.mjs"
 import { BUBBLE_HEIGHT } from "./shapes/bubble.mjs"
 import { BUBBLE_ARROW } from "./shapes/bubble.mjs"
 import { BUBBLE_WIDTH } from "./shapes/bubble.mjs"
@@ -18,6 +17,15 @@ const NODE_OUTLINE_WIDTH = 5
 
 let nodeArray = []
 
+function isPointInCircle(pointX, pointY, circleX, circleY, circleRadius) {
+  const distanceSquared = (pointX - circleX) * (pointX - circleX) + (pointY - circleY) * (pointY - circleY)
+  return distanceSquared <= circleRadius * circleRadius
+}
+
+function isMouseInCircle(circleX, circleY, circleRadius) {
+  return isPointInCircle(mouse.x, mouse.y, circleX, circleY, circleRadius)
+}
+
 function drawNode(node) {
   context.beginPath()
   context.arc(node.x * zoom + centre.x, node.y * zoom + centre.y, NODE_RADIUS * zoom, 0, 2 * Math.PI, false)
@@ -29,7 +37,7 @@ function drawNode(node) {
 
   context.fillStyle = "black"
   context.textBaseline = "middle";
-  context.fillText("s" + node.id, node.x * zoom + centre.x, node.y * zoom + centre.y);
+  context.fillText("s" + node.id, node.x * zoom + centre.x, node.y * zoom + centre.y)
 }
 
 function drawMove(x, y) {
@@ -60,6 +68,10 @@ function drawActions() {
   drawBubble(selectedNode.x * zoom + centre.x, selectedNode.y * zoom + centre.y)
 }
 
+function isHoveringOverAction() {
+
+}
+
 export function draw() {
   context.font = `${NODE_RADIUS * zoom}px Arial`
   context.textAlign = "center"
@@ -83,8 +95,8 @@ function snapNodePositionIfEnabled(x, y) {
 }
 
 function createNode() {
-  if (!selectedNode && !hoveringOverNode && !mouse.hasMovedSinceDown) {
-    const [x, y] = snapNodePositionIfEnabled((mouse.x - centre.x) / zoom, (mouse.y - centre.y) / zoom)
+  if (!selectedNode && !hoveringOverNode && !hasMovedSinceDown) {
+    const [x, y] = snapNodePositionIfEnabled(mouse.x, mouse.y)
     nodeArray.push(new Node(x, y))
   }
 }
@@ -94,11 +106,7 @@ function whichNodeIsMouseHoveringOver() {
   canvas.style.cursor = 'default'
   hoveringOverNode = null
   nodeArray.forEach(node => {
-    const mouseX = Math.round((mouse.x - centre.x) / zoom)
-    const mouseY = Math.round((mouse.y - centre.y) / zoom)
-
-    const distanceSquared = (mouseX - node.x) * (mouseX - node.x) + (mouseY - node.y) * (mouseY - node.y)
-    if (distanceSquared <= NODE_RADIUS * NODE_RADIUS) {
+    if (isMouseInCircle(node.x, node.y, NODE_RADIUS * zoom) && !selectedNode) {
       canvas.style.cursor = 'pointer'
       hoveringOverNode = node
     }
@@ -131,7 +139,7 @@ function finishConnecting() {
 }
 
 function selectNode() {
-  if (hoveringOverNode && !hasMouseLeftNode) {
+  if (hoveringOverNode && !hasMouseLeftNode && !selectedNode) {
     selectedNode = hoveringOverNode
   }
 }
@@ -148,9 +156,10 @@ document.getElementById("SNAP_EXISTING_NODES").addEventListener("click", () => {
   })
 })
 
-mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, createNode)
-mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, deselectNode)
-mouse.subscribe(mouse.EVENT_TYPE.MOVE, whichNodeIsMouseHoveringOver)
-mouse.subscribe(mouse.EVENT_TYPE.DOWN_LEFT, startConnecting)
-mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, finishConnecting)
-mouse.subscribe(mouse.EVENT_TYPE.UP_LEFT, selectNode)
+subscribe(EVENT_TYPE.UP_LEFT, createNode)
+subscribe(EVENT_TYPE.UP_LEFT, deselectNode)
+subscribe(EVENT_TYPE.MOVE, whichNodeIsMouseHoveringOver)
+subscribe(EVENT_TYPE.MOVE, isHoveringOverAction)
+subscribe(EVENT_TYPE.DOWN_LEFT, startConnecting)
+subscribe(EVENT_TYPE.UP_LEFT, finishConnecting)
+subscribe(EVENT_TYPE.UP_LEFT, selectNode)

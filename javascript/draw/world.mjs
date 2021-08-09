@@ -1,8 +1,8 @@
-import * as connections from "./connections.mjs"
-import * as nodes from "./nodes.mjs"
-import * as grid from "./grid.mjs"
-import * as mouse from "../events/mouse.mjs"
+import { subscribe, EVENT_TYPE, x as mouseX, y as mouseY } from "../events/mouse.mjs"
 import { CANVAS_WIDTH, CANVAS_HEIGHT, ZOOM_STEP } from "../settings/application.mjs"
+import { draw as gridDraw } from "./grid.mjs"
+import { draw as connectionsDraw } from "./connections.mjs"
+import { draw as nodesDraw } from "./nodes.mjs"
 
 export let canvas
 export let context
@@ -18,9 +18,9 @@ export function initialise() {
 export function draw() {
   requestAnimationFrame(draw)
   context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-  grid.draw()
-  connections.draw()
-  nodes.draw()
+  gridDraw()
+  connectionsDraw()
+  nodesDraw()
 }
 
 export function zoomIn() {
@@ -41,5 +41,12 @@ export function zoomOut() {
   }
 }
 
-mouse.subscribe(mouse.EVENT_TYPE.SCROLL_IN, zoomIn)
-mouse.subscribe(mouse.EVENT_TYPE.SCROLL_OUT, zoomOut)
+export const mouse = { x: 0, y: 0 }
+export function onMouseMove() {
+  mouse.x = Math.round((mouseX - centre.x) / zoom)
+  mouse.y = Math.round((mouseY - centre.y) / zoom)
+}
+
+subscribe(EVENT_TYPE.SCROLL_IN, zoomIn)
+subscribe(EVENT_TYPE.SCROLL_OUT, zoomOut)
+subscribe(EVENT_TYPE.MOVE, onMouseMove)
