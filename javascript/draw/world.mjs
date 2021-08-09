@@ -26,8 +26,8 @@ export function draw() {
 export function zoomIn() {
   if (zoom < 2 - ZOOM_STEP) {
     const zoomDifference = (zoom + ZOOM_STEP) / zoom
-    centre.x = mouse.x - (mouse.x - centre.x) * zoomDifference
-    centre.y = mouse.y - (mouse.y - centre.y) * zoomDifference
+    centre.x = mouseX - (mouseX - centre.x) * zoomDifference
+    centre.y = mouseY - (mouseY - centre.y) * zoomDifference
     zoom += ZOOM_STEP
   }
 }
@@ -35,8 +35,8 @@ export function zoomIn() {
 export function zoomOut() {
   if (zoom > ZOOM_STEP + 0.1) {
     const zoomDifference = (zoom - ZOOM_STEP) / zoom
-    centre.x = mouse.x - (mouse.x - centre.x) * zoomDifference
-    centre.y = mouse.y - (mouse.y - centre.y) * zoomDifference
+    centre.x = mouseX - (mouseX - centre.x) * zoomDifference
+    centre.y = mouseY - (mouseY - centre.y) * zoomDifference
     zoom -= ZOOM_STEP
   }
 }
