@@ -74,6 +74,9 @@ export function move() {
     centre.x = previousCentre.x + (mouse.x - dragFrom.x) * zoom
     centre.y = previousCentre.y + (mouse.y - dragFrom.y) * zoom
   }
+  if (!shouldMove()) {
+    stopMoving()
+  }
 }
 
 export function stopMoving() {
