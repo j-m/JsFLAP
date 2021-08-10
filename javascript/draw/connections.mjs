@@ -87,7 +87,7 @@ function drawConnection(fromNode, toNode) {
 
 export function draw() {
   context.strokeStyle = 'black'
-  context.lineWidth = '2'
+  context.lineWidth = 2 * zoom
   context.beginPath()
 
   for (let fromNode in connectionArray) {
