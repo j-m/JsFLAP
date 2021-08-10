@@ -1,5 +1,5 @@
-import { context, centre, zoom, mouse } from "./world.mjs"
-import { subscribe, EVENT_TYPE } from "../events/mouse.mjs"
+import { context, centre, zoom } from "./world.mjs"
+import { subscribe, EVENT_TYPE, x as mouseX, y as mouseY } from "../events/mouse.mjs"
 import { CANVAS_WIDTH, CANVAS_HEIGHT, GRID_STEP } from "../settings/application.mjs"
 import { SHOW_CENTRE } from "../settings/user.mjs"
 import { connectFromNode } from "./connections.mjs"
@@ -64,18 +64,15 @@ function shouldMove() {
 export function startMoving() {
   if (shouldMove()) {
     dragging = true
-    dragFrom = { x: mouse.x, y: mouse.y }
+    dragFrom = { x: mouseX, y: mouseY }
     previousCentre = { x: centre.x, y: centre.y }
   }
 }
 
 export function move() {
-  if (dragging) {
-    centre.x = previousCentre.x + (mouse.x - dragFrom.x) * zoom
-    centre.y = previousCentre.y + (mouse.y - dragFrom.y) * zoom
-  }
-  if (!shouldMove()) {
-    stopMoving()
+  if (shouldMove() && dragging) {
+    centre.x = previousCentre.x + (mouseX - dragFrom.x) * zoom
+    centre.y = previousCentre.y + (mouseY - dragFrom.y) * zoom
   }
 }
 
